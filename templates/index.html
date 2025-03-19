@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebVoyager Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>WebVoyager Chatbot</h1>
+    <form id="task-form">
+        <label>Web URL:</label><br>
+        <input type="text" id="web" required><br><br>
+
+        <label>Question:</label><br>
+        <input type="text" id="question" required><br><br>
+
+        <label>API Key:</label><br>
+        <input type="text" id="api_key" required><br><br>
+
+        <label>API Model:</label><br>
+        <input type="text" id="api_model" value="gpt-4o-mini" required><br><br>
+
+        <button type="submit">Execute Task</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        $('#task-form').submit(function(event) {
+            event.preventDefault();
+            const web = $('#web').val();
+            const question = $('#question').val();
+            const api_key = $('#api_key').val();
+            const api_model = $('#api_model').val();
+
+            $.ajax({
+                url: '/run-task',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    web: web,
+                    question: question,
+                    api_key: api_key,
+                    api_model: api_model
+                }),
+                success: function(response) {
+                    $('#result').text('Result: ' + response.result);
+                },
+                error: function(error) {
+                    $('#result').text('Error: ' + error.responseJSON.error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
